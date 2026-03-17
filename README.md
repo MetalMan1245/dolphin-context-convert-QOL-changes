@@ -1,6 +1,6 @@
 # KDE Plasma FFmpeg Converter
 
-Right-click to convert audio/video/images in KDE Plasma. Uses FFmpeg. I only deal in KDE rn, feel free to PR for more compatibility
+Right-click to convert audio/video/images in KDE Plasma. Uses FFmpeg. Fixed instructions, new features listed at the bottom.
 
 ## Requirements
 1. ffmpeg
@@ -9,10 +9,10 @@ Right-click to convert audio/video/images in KDE Plasma. Uses FFmpeg. I only dea
 
 ## Install
 
-1. put `ffmpegconvert.sh` in `~/Scripts/`
-2. Put `.desktop` files in `~/.local/share/kservices5/ServiceMenus/`.
+1. Put `ffmpegconvert.sh` in `~/Scripts`
+2. Put `.desktop` files in `~/.local/share/kio/servicemenus/`.
 3. `chmod +x ~/Scripts/ffmpegconvert.sh`
-4. edit `.desktop` files if you want the script elsewhere idk im not your mom
+4. Edit `.desktop` files if you want the script elsewhere.
 
 ## Use
 
@@ -23,3 +23,14 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 - Audio: MP3, AAC, OGG, WMA, FLAC, ALAC, WAV, AIFF
 - Video: MP4, AVI, MOV, MKV, WMV, FLV, MPG, OGV
 - Image: JPG, PNG, GIF, BMP, TIFF, WEBP, EPS, RAW, ICO, PSD (only supports converting from)
+
+## New Features
+
+- Better defaults so video looks more visually lossless without tinkering
+- Davinci Resolve special convert (converts to MP4 with AV1 and opus, confirmed working with Davinci Resolve)
+- Added working cancel button
+
+## Working On It
+
+- Batch conversion
+- Progress feedback from this branch 'https://github.com/alpikins/dolphin-context-convert'
