@@ -2,7 +2,7 @@
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
 MimeType=video/*;
-Actions=ConvertToMP4;ConvertToAVI;ConvertToMOV;ConvertToMKV;ConvertToWMV;ConvertToFLV;ConvertToMPG;ConvertToMP3;ConvertToOGV;ConvertToWebM;
+Actions=ConvertToMP4;ConvertToMP4Resolve;ConvertToAVI;ConvertToMOV;ConvertToMKV;ConvertToWMV;ConvertToFLV;ConvertToMPG;ConvertToMP3;ConvertToOGV;ConvertToWebM;
 X-KDE-Submenu=Convert Video
 Icon=video-x-generic
 X-KDE-StartupNotify=false
@@ -10,6 +10,11 @@ X-KDE-StartupNotify=false
 [Desktop Action ConvertToMP4]
 Name=Convert to MP4
 Exec=~/Scripts/ffmpegconvert.sh %U mp4 video
+Icon=video-mp4
+
+[Desktop Action ConvertToMP4Resolve]
+Name=Convert to MP4 (Davinci Resolve)
+Exec=~/Scripts/ffmpegconvert.sh %U mp4 video resolve
 Icon=video-mp4
 
 [Desktop Action ConvertToAVI]
