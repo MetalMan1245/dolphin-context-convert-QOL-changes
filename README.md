@@ -27,10 +27,15 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 ## New Features
 
 - Better defaults so video looks more visually lossless without tinkering
-- Davinci Resolve special convert (converts to MP4 with AV1 and opus, confirmed working with Davinci Resolve)
 - Added working cancel button
+- For a specific Davinci Resolve compatibility converter see my other project `https://github.com/MetalMan1245/DaVinci-Resolve-Video-Converter-for-Dolphin-File-Manager`
 
-## Working On It
+## Upcoming Features
 
 - Batch conversion
-- Progress feedback from this branch 'https://github.com/alpikins/dolphin-context-convert'
+- Progress feedback from this branch `https://github.com/alpikins/dolphin-context-convert`
+- Remove Davinci Resolve features from script, not just .desktop file
+
+## Disclaimers
+
+THIS IS VIBE CODED.  I am not a real programmer and as such AI was used to create this, therefore I do not promise quality, repeatability, or robustness.
