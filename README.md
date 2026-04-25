@@ -26,16 +26,13 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 
 ## New Features
 
-- Better defaults so video looks more visually lossless without tinkering
-- Added working cancel button
+- Added batch conversion support
+- Added codec copy support for videos, if the new container supports the old video and audio formats, conversion should be relatively instant
+- Sequential processing with updated GUI, working cancel button, and per-conversion progress.
 - For a specific Davinci Resolve compatibility converter see my other project `https://github.com/MetalMan1245/DaVinci-Resolve-Video-Converter-for-Dolphin-File-Manager`
-
-## Upcoming Features
-
-- Batch conversion
-- Progress feedback from this branch `https://github.com/alpikins/dolphin-context-convert`
-- Remove Davinci Resolve features from script, not just .desktop file
 
 ## Disclaimers
 
 THIS IS VIBE CODED.  I am not a real programmer and as such AI was used to create this, therefore I do not promise quality, repeatability, or robustness.
+
+I am happy with where the script is now and it will probably only be bugfixes from here on out.
