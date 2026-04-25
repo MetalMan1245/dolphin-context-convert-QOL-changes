@@ -10,44 +10,44 @@ X-KDE-StartupNotify=false
 [Desktop Action ConvertToJPG]
 Name=Convert to JPG
 Icon=image-jpeg
-Exec=~/Scripts/ffmpegconvert.sh %U jpg image
+Exec=~/Scripts/ffmpegconvert.sh jpg %F
 
 [Desktop Action ConvertToPNG]
 Name=Convert to PNG
 Icon=image-png
-Exec=~/Scripts/ffmpegconvert.sh %U png image
+Exec=~/Scripts/ffmpegconvert.sh png %F
 
 [Desktop Action ConvertToGIF]
 Name=Convert to GIF
 Icon=image-gif
-Exec=~/Scripts/ffmpegconvert.sh %U gif image
+Exec=~/Scripts/ffmpegconvert.sh gif %F
 
 [Desktop Action ConvertToBMP]
 Name=Convert to BMP
 Icon=image-bmp
-Exec=~/Scripts/ffmpegconvert.sh %U bmp image
+Exec=~/Scripts/ffmpegconvert.sh bmp %F
 
 [Desktop Action ConvertToTIFF]
 Name=Convert to TIFF
 Icon=image-tiff
-Exec=~/Scripts/ffmpegconvert.sh %U tiff image
+Exec=~/Scripts/ffmpegconvert.sh tiff %F
 
 [Desktop Action ConvertToWEBP]
 Name=Convert to WEBP
 Icon=image-webp
-Exec=~/Scripts/ffmpegconvert.sh %U webp image
+Exec=~/Scripts/ffmpegconvert.sh webp %F
 
 [Desktop Action ConvertToEPS]
 Name=Convert to EPS
 Icon=image-x-eps
-Exec=~/Scripts/ffmpegconvert.sh %U eps image
+Exec=~/Scripts/ffmpegconvert.sh eps %F
 
 [Desktop Action ConvertToRAW]
 Name=Convert to RAW
 Icon=image-x-dcraw
-Exec=~/Scripts/ffmpegconvert.sh %U raw image
+Exec=~/Scripts/ffmpegconvert.sh raw %F
 
 [Desktop Action ConvertToICO]
 Name=Convert to ICO
 Icon=image/vnd.microsoft.icon
-Exec=~/Scripts/ffmpegconvert.sh %U ico image
+Exec=~/Scripts/ffmpegconvert.sh ico %F
