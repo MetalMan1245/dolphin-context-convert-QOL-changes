@@ -1,149 +1,133 @@
 #!/bin/bash
 
-input_file="$1"
-output_extension="$2"
-input_format="$3"
-resolve_flag="$4"   # new argument to detect Resolve conversion
-filename=$(basename -- "$input_file")
-filename_noext="${filename%.*}"
+output_extension="$1"
+shift
 
-# Set output file path
-if [ "$output_extension" == "alac" ]; then
-    output_file="${filename_noext}.m4a"
-else
-    output_file="${filename_noext}.${output_extension}"
+if [ -z "$output_extension" ]; then
+    zenity --error --text="No output format specified."
+    exit 1
 fi
 
-alossy=("mp3" "aac" "ogg" "wma" "m4a")
-alossless=("flac" "alac" "wav" "aiff")
-ilossy=("jpg" "gif" "webp")
-ilossless=("png" "bmp" "tiff" "eps" "raw" "ico" "tga")
-superlossless=("psd")
-alllossy=( "${alossy[@]}" "${ilossy[@]}" )
-alllossless=( "${alossless[@]}" )
-
-
-
-# warnings for lossy <-> lossless conversions
-input_extension="${filename##*.}"
-if [[ " ${alllossy[@]} " =~ " ${input_extension} " ]] && [[ " ${alllossless[@]} " =~ " ${output_extension} " ]]; then
-    zenity --question --text="WARNING: Converting from lossy to lossless.\nQuality will NOT improve.\nContinue?" \
-        --ok-label="Continue" --cancel-label="Cancel" --default-cancel --icon-name="warning"
-    if [ $? -ne 0 ]; then exit 1; fi
+if [ $# -eq 0 ]; then
+    zenity --error --text="No input files provided."
+    exit 1
 fi
 
-if [[ " ${alllossless[@]} " =~ " ${input_extension} " ]] && [[ " ${alllossy[@]} " =~ " ${output_extension} " ]]; then
-    zenity --question --text="WARNING: Converting from lossless to lossy.\nQuality will NOT be preserved.\nContinue?" \
-        --ok-label="Continue" --cancel-label="Cancel" --default-cancel --icon-name="warning"
-    if [ $? -ne 0 ]; then exit 1; fi
-fi
+output_extension="$(echo "$output_extension" | tr '[:upper:]' '[:lower:]')"
 
-if [[ " ${superlossless[@]} " =~ " ${input_extension} " ]]; then
-    zenity --question --text="WARNING: This file contains extra data (layers, etc.) that will be lost.\nContinue?" \
-        --ok-label="Continue" --cancel-label="Cancel" --default-cancel --icon-name="warning"
-    if [ $? -ne 0 ]; then exit 1; fi
-fi
+video_exts=("mp4" "mkv" "mov" "avi" "webm" "flv" "mpg" "mpeg" "ogv")
 
-# --- RESOLVE SPECIAL CASE ---
-if [[ "$resolve_flag" == "resolve" ]]; then
-    output_file="${filename_noext}_resolve.mp4"
+any_failed=0
+total_files=$#
+current=0
 
-    ffmpeg_cmd=(
-        ffmpeg -i "$input_file"
-        -map 0
-        -map_metadata 0
-        -c:v av1_qsv -crf 30 -preset 6
-        -c:a libopus -b:a 192k
-        "$output_file"
-    )
-else
-    # normal conversion based on extension
-    if [[ " ${alossy[@]} " =~ " ${output_extension} " ]] || [[ " ${alossless[@]} " =~ " ${output_extension} " ]]; then
+(
+for input_file in "$@"; do
+    current=$((current + 1))
+
+    filename=$(basename -- "$input_file")
+    filename_noext="${filename%.*}"
+    input_extension="$(echo "${filename##*.}" | tr '[:upper:]' '[:lower:]')"
+    dir=$(dirname "$input_file")
+
+    if [ "$output_extension" == "alac" ]; then
+        output_file="$dir/${filename_noext}.m4a"
+    else
+        output_file="$dir/${filename_noext}.${output_extension}"
+    fi
+
+    echo "# Converting ($current/$total_files)\n$filename"
+
+    ########################################
+    # DETECT CODECS
+    ########################################
+
+    video_codec=""
+    audio_codec=""
+
+    if [[ " ${video_exts[@]} " =~ " ${input_extension} " ]]; then
+        video_codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "$input_file")
+        audio_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of csv=p=0 "$input_file")
+    fi
+
+    ########################################
+    # BUILD COMMAND
+    ########################################
+
+    if [[ " ${video_exts[@]} " =~ " ${input_extension} " ]]; then
+
+        can_copy=0
+
         case "$output_extension" in
-            mp3)
-                # High quality MP3 (CBR 320kbps)
-                ffmpeg_cmd=(ffmpeg -i "$input_file" -codec:a libmp3lame -b:a 320k "$output_file")
+            mp4)
+                [[ "$video_codec" =~ ^(h264|hevc|mpeg4)$ && "$audio_codec" =~ ^(aac|mp3)$ ]] && can_copy=1
                 ;;
-            aac|m4a)
-                # High quality AAC (VBR 0 = best)
-                ffmpeg_cmd=(ffmpeg -i "$input_file" -codec:a aac -q:a 0 "$output_file")
+            mkv)
+                can_copy=1
                 ;;
-            ogg)
-                # High quality OGG Vorbis (VBR 10 = best)
-                ffmpeg_cmd=(ffmpeg -i "$input_file" -codec:a libvorbis -q:a 10 "$output_file")
+            webm)
+                [[ "$video_codec" =~ ^(vp8|vp9|av1)$ && "$audio_codec" =~ ^(opus|vorbis)$ ]] && can_copy=1
                 ;;
-            wma)
-                # High quality WMA (variable bitrate max)
-                ffmpeg_cmd=(ffmpeg -i "$input_file" -codec:a wmav2 -b:a 192k "$output_file")
+            avi)
+                [[ "$video_codec" =~ ^(mpeg4|h264)$ && "$audio_codec" =~ ^(mp3)$ ]] && can_copy=1
                 ;;
-            flac|alac|wav|aiff)
-                # Lossless: just copy to preserve quality
-                if [ "$output_extension" == "alac" ]; then
-                    ffmpeg_cmd=(ffmpeg -i "$input_file" -acodec alac "$output_file")
-                else
-                    ffmpeg_cmd=(ffmpeg -i "$input_file" -c:a copy "$output_file")
-                fi
+            mpg|mpeg)
+                [[ "$video_codec" =~ ^(mpeg1video|mpeg2video)$ ]] && can_copy=1
                 ;;
-            *)
-                ffmpeg_cmd=(ffmpeg -i "$input_file" -q:a 0 "$output_file")
+            ogv)
+                [[ "$video_codec" == "theora" ]] && can_copy=1
                 ;;
         esac
-    else
-        # images
-        ffmpeg_cmd=(ffmpeg -i "$input_file" -q:v 1 "$output_file")
-    fi
-fi
 
-# don't overwrite a file
-if [ -e "$output_file" ]; then
-    zenity --error --text="The target file already exists."
-    exit 1
-fi
-
-# run the command in background
-setsid "${ffmpeg_cmd[@]}" &
-CONVERT_PID=$!
-
-# progress dialog
-# start progress dialog in background
-(
-    while true; do
-        if ! kill -0 $CONVERT_PID 2>/dev/null; then
-            break
+        if [ $can_copy -eq 1 ]; then
+            ffmpeg -y -i "$input_file" -c copy "$output_file" > /dev/null 2>&1
+        else
+            case "$output_extension" in
+                mp4|mkv|mov)
+                    ffmpeg -y -i "$input_file" -c:v libx264 -crf 18 -preset medium -c:a aac "$output_file"
+                    ;;
+                webm)
+                    ffmpeg -y -i "$input_file" -c:v libvpx-vp9 -c:a libopus "$output_file"
+                    ;;
+                avi)
+                    ffmpeg -y -i "$input_file" -c:v libx264 -c:a mp3 "$output_file"
+                    ;;
+                mpg|mpeg)
+                    ffmpeg -y -i "$input_file" -c:v mpeg2video -c:a mp2 "$output_file"
+                    ;;
+                ogv)
+                    ffmpeg -y -i "$input_file" -c:v libtheora -c:a libvorbis "$output_file"
+                    ;;
+                *)
+                    ffmpeg -y -i "$input_file" -c:v libx264 -c:a aac "$output_file"
+                    ;;
+            esac
         fi
-        echo "# Converting\n$filename\nto\n$output_file"
-        sleep 1
-    done
-) | zenity --progress \
-    --title="Converting Media" \
-    --text="Initializing..." \
-    --auto-close &
 
-ZENITY_PID=$!
-
-# monitor both processes
-while true; do
-    # ffmpeg finished
-    if ! kill -0 $CONVERT_PID 2>/dev/null; then
-        break
+    else
+        ffmpeg -y -i "$input_file" "$output_file"
     fi
 
-    # user closed/cancelled zenity
-    if ! kill -0 $ZENITY_PID 2>/dev/null; then
-        kill -9 -$CONVERT_PID 2>/dev/null
-        rm -f "$output_file"
-        zenity --error --text="Conversion canceled. Target file deleted."
-        exit 1
+    status=$?
+    if [ $status -ne 0 ]; then
+        any_failed=1
     fi
 
-    sleep 0.5
+    echo $((current * 100 / total_files))
+
 done
+) | zenity --progress \
+    --title="Batch Conversion" \
+    --percentage=0 \
+    --auto-close
 
-wait $CONVERT_PID
-
-# check exit status
-wait $CONVERT_PID
 if [ $? -ne 0 ]; then
-    zenity --error --text="An error occurred during conversion."
+    zenity --warning --text="Conversion cancelled."
     exit 1
+fi
+
+if [ $any_failed -eq 1 ]; then
+    zenity --warning --text="Some conversions failed."
+else
+    zenity --info --text="Conversion complete."
 fi
