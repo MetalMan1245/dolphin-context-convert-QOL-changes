@@ -10,7 +10,7 @@ Right-click to convert audio/video/images in KDE Plasma. Uses FFmpeg. Fixed inst
 ## Install
 
 1. Put `ffmpegconvert.sh` in `~/Scripts`
-2. Put `.desktop` files in `~/.local/share/kio/servicemenus/`.
+2. Put `.desktop` files in `~/.local/share/kio/servicemenus/`. (Substitute `/usr/share/kio/servicemenus` for non-KDE native distros)
 3. `chmod +x ~/Scripts/ffmpegconvert.sh`
 4. Edit `.desktop` files if you want the script elsewhere.
 
@@ -30,6 +30,11 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 - Added codec copy support for videos, if the new container supports the old video and audio formats, conversion should be relatively instant
 - Sequential processing with updated GUI, working cancel button, and per-conversion progress.
 - For a specific Davinci Resolve compatibility converter see my other project `https://github.com/MetalMan1245/DaVinci-Resolve-Video-Converter-for-Dolphin-File-Manager`
+
+## Known issues
+
+- Cancel button still broken on non-KDE distros
+- Multiple audio streams not supported
 
 ## Disclaimers
 
