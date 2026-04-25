@@ -31,10 +31,12 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 - Sequential processing with updated GUI, working cancel button, and per-conversion progress.
 - For a specific Davinci Resolve compatibility converter see my other project `https://github.com/MetalMan1245/DaVinci-Resolve-Video-Converter-for-Dolphin-File-Manager`
 
-## Known issues
+## Upcoming Features/Bugfixes
 
 - Cancel button still broken on non-KDE distros
 - Multiple audio streams not supported
+
+- Installer script
 
 ## Disclaimers
 
