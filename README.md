@@ -5,12 +5,16 @@ Right-click to convert audio/video/images in KDE Plasma. Uses FFmpeg. Fixed inst
 ## Requirements
 1. ffmpeg
 2. zenity
-3. imagemagick
 
 ## Install
 
+Run `ffmpegconvert-installer.desktop` (if this fails run `install_uninstall.sh` in Terminal)
+
+WARNING: The uninstall portion of the installer should be fine now, but I did completely break a KDE Neon install by running an earlier version of it, so use at your own risk.  I would recommend deleting .desktop entries and the script manually if you really want this gone, or just disable them in Dolphin since the files are extremely small (this entire repo is well under 1 MB as of writing this).
+
+For a manual install:
 1. Put `ffmpegconvert.sh` in `~/Scripts`
-2. Put `.desktop` files in `~/.local/share/kio/servicemenus/`. (Substitute `/usr/share/kio/servicemenus` for non-KDE native distros)
+2. Put `.desktop` files in `~/.local/share/kio/servicemenus/`. (Substitute `/usr/share/kio/servicemenus` for a global install)
 3. `chmod +x ~/Scripts/ffmpegconvert.sh`
 4. Edit `.desktop` files if you want the script elsewhere.
 
@@ -26,6 +30,7 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 
 ## New Features
 
+- Easy installer
 - Added batch conversion support
 - Added codec copy support for videos, if the new container supports the old video and audio formats, conversion should be relatively instant
 - Sequential processing with updated GUI, working cancel button, and per-conversion progress.
@@ -33,10 +38,8 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 
 ## Upcoming Features/Bugfixes
 
-- Cancel button still broken on non-KDE distros
+- Cancel button still broken on other systems (works fine on my test system but no others I've tried)
 - Multiple audio streams not supported
-
-- Installer script
 
 ## Disclaimers
 
