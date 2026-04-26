@@ -15,8 +15,8 @@ SCRIPT_SOURCE="$SCRIPT_DIR/release/ffmpegconvert.sh"
 shopt -s nullglob
 DESKTOP_FILES=("$SCRIPT_DIR"/release/servicemenus/*.desktop)
 
-DEFAULT_SCRIPT_DIR="$HOME/Scripts"
-DEFAULT_SCRIPT_PATH="$HOME/Scripts/ffmpegconvert.sh"
+DEFAULT_SCRIPT_DIR="$HOME/.local/bin"
+DEFAULT_SCRIPT_PATH="$HOME/.local/bin/ffmpegconvert.sh"
 
 USER_DIR="$HOME/.local/share/kio/servicemenus"
 SYSTEM_DIR="/usr/share/kio/servicemenus"
