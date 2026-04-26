@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=FFmpeg Convert Installer
+Comment=Install / uninstall FFmpeg Convert service menus
+Exec=sh -c '"$(dirname "$0")/install_uninstall.sh"; exec $SHELL' %k
+Icon=system-software-install
+Terminal=true
+Categories=Utility;
