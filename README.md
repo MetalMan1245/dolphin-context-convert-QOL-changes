@@ -8,12 +8,12 @@ Right-click to convert audio/video/images in KDE Plasma. Uses FFmpeg. Fixed inst
 
 ## Install
 
-Run `ffmpegconvert-installer.desktop` (if this fails run `install_uninstall.sh` in Terminal)
+Run `ffmpegconvert-installer.desktop` (if this fails run `ffmpeg-install_remote.sh` in Terminal)
 
 WARNING: The uninstall portion of the installer should be fine now, but I did completely break a KDE Neon install by running an earlier version of it, so use at your own risk.  I would recommend deleting .desktop entries and the script manually if you really want this gone, or just disable them in Dolphin since the files are extremely small (this entire repo is well under 1 MB as of writing this).
 
 For a manual install:
-1. Put `ffmpegconvert.sh` in `~/Scripts`
+1. Put `ffmpegconvert.sh` in `~/.local/bin`
 2. Put `.desktop` files in `~/.local/share/kio/servicemenus/`. (Substitute `/usr/share/kio/servicemenus` for a global install)
 3. `chmod +x ~/Scripts/ffmpegconvert.sh`
 4. Edit `.desktop` files if you want the script elsewhere.
@@ -40,8 +40,6 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 
 - Cancel button still broken on other systems (works fine on my test system but no others I've tried)
 - Multiple audio streams not supported
-
-- Change .desktop installer to one click, single file download option in releases
 
 ## Disclaimers
 
