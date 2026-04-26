@@ -41,6 +41,8 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 - Cancel button still broken on other systems (works fine on my test system but no others I've tried)
 - Multiple audio streams not supported
 
+- Change .desktop installer to one click, single file download option in releases
+
 ## Disclaimers
 
 THIS IS VIBE CODED.  I am not a real programmer and as such AI was used to create this, therefore I do not promise quality, repeatability, or robustness.
