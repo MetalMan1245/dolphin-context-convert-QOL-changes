@@ -4,5 +4,5 @@ Name=FFmpeg Convert Installer
 Comment=Install or update FFmpeg Convert
 Icon=system-software-install
 Terminal=true
-Exec=bash -c 'mkdir -p "$HOME/.local/bin"; curl -fsSL https://raw.githubusercontent.com/MetalMan1245/dolphin-context-convert-QOL-changes/main/ffmpeg-install_remote.sh -o "$HOME/.local/bin/ffmpeg-install_remote.sh" && chmod +x "$HOME/.local/bin/ffmpeg-install_remote.sh" && exec "$HOME/.local/bin/ffmpeg-install_remote.sh"'
+Exec=bash -c 'mkdir -p "$HOME/.local/bin"; curl -fsSL https://raw.githubusercontent.com/MetalMan1245/dolphin-context-convert-QOL-changes/main/ffmpeg-install_remote.sh -o "$HOME/.local/bin/ffmpeg-install_remote.sh" && chmod +x "$HOME/.local/bin/ffmpeg-install_remote.sh" && "$HOME/.local/bin/ffmpeg-install_remote.sh"; echo; read -p "Press Enter to close..."'
 Categories=Utility;
