@@ -38,7 +38,6 @@ Right-click file in Dolphin -> Choose format. Can converet video to mp3 as a bon
 
 ## Upcoming Features/Bugfixes
 
-- Cancel button still broken on other systems (works fine on my test system but no others I've tried)
 - Multiple audio streams not supported
 
 ## Disclaimers
