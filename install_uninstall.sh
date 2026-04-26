@@ -10,10 +10,10 @@ CONFIG_FILE="$CONFIG_DIR/install.conf"
 MANIFEST_FILE="$CONFIG_DIR/manifest.txt"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPT_SOURCE="$SCRIPT_DIR/ffmpegconvert.sh"
+SCRIPT_SOURCE="$SCRIPT_DIR/release/ffmpegconvert.sh"
 
 shopt -s nullglob
-DESKTOP_FILES=("$SCRIPT_DIR"/*.desktop)
+DESKTOP_FILES=("$SCRIPT_DIR"/release/servicemenus/*.desktop)
 
 DEFAULT_SCRIPT_DIR="$HOME/Scripts"
 DEFAULT_SCRIPT_PATH="$HOME/Scripts/ffmpegconvert.sh"
