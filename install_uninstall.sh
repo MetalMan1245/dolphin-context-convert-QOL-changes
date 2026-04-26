@@ -9,6 +9,8 @@ CONFIG_DIR="$HOME/.config/ffmpegconvert"
 CONFIG_FILE="$CONFIG_DIR/install.conf"
 MANIFEST_FILE="$CONFIG_DIR/manifest.txt"
 
+mkdir -p "$CONFIG_DIR"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_SOURCE="$SCRIPT_DIR/release/ffmpegconvert.sh"
 
@@ -276,8 +278,6 @@ refresh_kde
 ########################################
 # SAVE CONFIG
 ########################################
-
-mkdir -p "$CONFIG_DIR"
 
 cat > "$CONFIG_FILE" <<EOF
 SCRIPT_PATH="$SCRIPT_DEST"
