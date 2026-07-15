@@ -134,7 +134,8 @@ for input_file in "$@"; do
   # RUN FFMPEG WITH REAL CANCEL
   ########################################
 
-  "${ffmpeg_cmd[@]}" &
+  ffmpeg_output_log_file="$(mktemp /tmp/dolphin-context-convert-XXXXXX.log)"
+  "${ffmpeg_cmd[@]}" 2>$ffmpeg_output_log_file &
   FFMPEG_PID=$!
 
   while kill -0 $FFMPEG_PID 2>/dev/null; do
@@ -175,7 +176,7 @@ exec 3>&- # close FIFO
 wait $ZENITY_PID 2>/dev/null
 
 if [ $any_failed -eq 1 ]; then
-  zenity --warning --text="Some conversions failed."
+  zenity --warning --text="Some conversions failed. Complete errors output can be found in $ffmpeg_output_log_file"
 else
   zenity --info --text="Conversion complete."
 fi
