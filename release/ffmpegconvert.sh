@@ -17,6 +17,7 @@ output_extension="$(echo "$output_extension" | tr '[:upper:]' '[:lower:]')"
 
 video_exts=("mp4" "mkv" "mov" "avi" "webm" "flv" "mpg" "mpeg" "ogv")
 
+ffmpeg_output_log_file="$(mktemp /tmp/dolphin-context-convert-XXXXXX.log)"
 any_failed=0
 total_files=$#
 current=0
@@ -134,8 +135,8 @@ for input_file in "$@"; do
   # RUN FFMPEG WITH REAL CANCEL
   ########################################
 
-  ffmpeg_output_log_file="$(mktemp /tmp/dolphin-context-convert-XXXXXX.log)"
-  "${ffmpeg_cmd[@]}" 2>$ffmpeg_output_log_file &
+  echo "Errors for file number $current ($input_file):" >>$ffmpeg_output_log_file
+  "${ffmpeg_cmd[@]}" 2>>$ffmpeg_output_log_file &
   FFMPEG_PID=$!
 
   while kill -0 $FFMPEG_PID 2>/dev/null; do
@@ -156,6 +157,7 @@ for input_file in "$@"; do
   status=$?
 
   if [ $status -ne 0 ]; then
+    echo "" >>$ffmpeg_output_log_file
     any_failed=1
   fi
 
