@@ -65,22 +65,25 @@ for input_file in "$@"; do
     echo "# Converting ($current/$total_files)\n$filename" >&3
 
     ########################################
-    # DETECT CODECS
+    # FILE TYPE ARRAYS
     ########################################
 
-    video_codec=""
-    audio_codec=""
+    video_exts=("mp4" "mkv" "mov" "avi" "webm" "flv" "mpg" "mpeg" "ogv")
+    raw_image_exts=("rw2" "raw" "cr2" "nef" "arw" "dng" "raf")  # Add other raw formats as needed
 
-    if [[ " ${video_exts[@]} " =~ " ${input_extension} " ]]; then
+    ########################################
+    # DETECT FILE TYPE AND BUILD COMMAND
+    ########################################
+
+    if [[ " ${raw_image_exts[@]} " =~ " ${input_extension} " ]]; then
+        # Handle raw image files with ImageMagick
+        magick_cmd=(convert "$input_file" "$output_file")
+
+    elif [[ " ${video_exts[@]} " =~ " ${input_extension} " ]]; then
+        # Video codec detection and handling
         video_codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "$input_file")
         audio_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of csv=p=0 "$input_file")
-    fi
 
-    ########################################
-    # BUILD COMMAND (unchanged)
-    ########################################
-
-    if [[ " ${video_exts[@]} " =~ " ${input_extension} " ]]; then
         can_copy=0
 
         case "$output_extension" in
@@ -126,33 +129,38 @@ for input_file in "$@"; do
                     ;;
             esac
         fi
+
     else
+        # Fallback for other audio/image files
         ffmpeg_cmd=(ffmpeg -y -i "$input_file" "$output_file")
     fi
 
     ########################################
-    # RUN FFMPEG WITH REAL CANCEL
+    # RUN CONVERSION WITH REAL CANCEL
     ########################################
 
-    "${ffmpeg_cmd[@]}" &
-    FFMPEG_PID=$!
+    if [[ " ${raw_image_exts[@]} " =~ " ${input_extension} " ]]; then
+        "${magick_cmd[@]}" &
+    else
+        "${ffmpeg_cmd[@]}" &
+    fi
 
-    while kill -0 $FFMPEG_PID 2>/dev/null; do
+    CONV_PID=$!
 
-        # 🔥 instant cancel
+    while kill -0 $CONV_PID 2>/dev/null; do
         if ! kill -0 $ZENITY_PID 2>/dev/null; then
-            kill -9 $FFMPEG_PID 2>/dev/null
+            kill -9 $CONV_PID 2>/dev/null
             rm -f "$output_file"
             exec 3>&-
             zenity --warning --text="Conversion cancelled."
             exit 1
         fi
-
         sleep 0.2
     done
 
-    wait $FFMPEG_PID
+    wait $CONV_PID
     status=$?
+
 
     if [ $status -ne 0 ]; then
         any_failed=1
